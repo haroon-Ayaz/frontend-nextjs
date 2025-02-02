@@ -13,7 +13,7 @@ export default function WaitingList() {
 
     const fetchPatients = async () => {
         try {
-            const response = await fetch("http://127.0.0.1:5000/api/get_waiting_patients");
+            const response = await fetch("https://flask-mvp.vercel.app/api/get_waiting_patients");
             const data = await response.json();
             setPatientList(data);
         } catch (error) {
@@ -23,7 +23,7 @@ export default function WaitingList() {
 
     const fetchClinicians = async () => {
         try {
-            const response = await fetch("http://127.0.0.1:5000/api/get_clinicians");
+            const response = await fetch("https://flask-mvp.vercel.app/api/get_clinicians");
             const data = await response.json();
             setClinician(data["clinicians"]);
         } catch (error) {
@@ -47,7 +47,7 @@ export default function WaitingList() {
         console.log("Assigning Patient", patientId);
         console.log("Clinician ", clinician);
         try {
-            const response = await fetch("http://127.0.0.1:5000/api/assignpatient", {
+            const response = await fetch("https://flask-mvp.vercel.app/api/assignpatient", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

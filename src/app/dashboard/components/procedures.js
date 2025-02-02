@@ -15,7 +15,7 @@ export default function ProcedureList() {
 
     const fetchPatients = React.useCallback(async () => {
         try {
-            const response = await fetch("http://127.0.0.1:5000/api/get_procedure_patients");
+            const response = await fetch("https://flask-mvp.vercel.app/api/get_procedure_patients");
             const data = await response.json();
             setPatientList(data);
         } catch (error) {
@@ -50,7 +50,7 @@ export default function ProcedureList() {
         console.log(`Checked patient: ${rxkid}`);
         // Add API call or logic here
         try {
-            const response = await fetch("http://127.0.0.1:5000/api/discharge_patient", {
+            const response = await fetch("https://flask-mvp.vercel.app/api/discharge_patient", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

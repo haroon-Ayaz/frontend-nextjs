@@ -19,7 +19,7 @@ export default function AddPatient() {
             problem: document.getElementById("problem").value,
         };
         try {
-            const response = await fetch("http://127.0.0.1:5000/addpatient", {
+            const response = await fetch("https://flask-mvp.vercel.app/api/addpatient", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

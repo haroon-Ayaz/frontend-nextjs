@@ -35,7 +35,7 @@ export default function Dashboard() {
 
     const fetchStatistics = async () => {
         try {
-            const response = await fetch("http://127.0.0.1:5000/api/get_statistics");
+            const response = await fetch("https://flask-mvp.vercel.app/api/get_statistics");
             const data = await response.json();
             setStats(data);
         } catch (error) {
@@ -45,7 +45,7 @@ export default function Dashboard() {
 
     const fetchClinicians = async () => {
         try {
-            const response = await fetch("http://127.0.0.1:5000/api/get_clinicians");
+            const response = await fetch("https://flask-mvp.vercel.app/api/get_clinicians");
             const data = await response.json();
             setCliTtl(data["total_clinicians"]);
             // setCli(data["clinicians"])

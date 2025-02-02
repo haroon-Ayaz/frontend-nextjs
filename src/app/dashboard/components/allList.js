@@ -12,7 +12,7 @@ export default function AllList() {
 
     const fetchPatients = async () => {
         try {
-            const response = await fetch("http://127.0.0.1:5000/api/getdata");
+            const response = await fetch("https://flask-mvp.vercel.app/api/getdata");
             const data = await response.json();
             setPatientList(data);
         } catch (error) {

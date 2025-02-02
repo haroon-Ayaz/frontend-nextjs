@@ -14,7 +14,7 @@ export default function DischargeList() {
 
     const fetchPatients = async () => {
         try {
-            const response = await fetch("http://127.0.0.1:5000/api/get_discharged_patients");
+            const response = await fetch("https://flask-mvp.vercel.app/api/get_discharged_patients");
             const data = await response.json();
             setPatientList(data);
         } catch (error) {
