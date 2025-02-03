@@ -7,17 +7,36 @@ import React from "react";
 export default function AddPatient() {
     const fillPatients = async (e) => {
         e.preventDefault();
+
+        // Ensure the form elements exist before accessing their values
+        const rxkidElement = document.getElementById("rxkid");
+        const titleElement = document.getElementById("title");
+        const fnameElement = document.getElementById("fname");
+        const snameElement = document.getElementById("sname");
+        const addressElement = document.getElementById("address");
+        const postcodeElement = document.getElementById("postcode");
+        const mobilephoneElement = document.getElementById("mobilephone");
+        const homephoneElement = document.getElementById("homephone");
+        const problemElement = document.getElementById("problem");
+
+        if (!rxkidElement || !titleElement || !fnameElement || !snameElement || !addressElement ||
+            !postcodeElement || !mobilephoneElement || !homephoneElement || !problemElement) {
+            alert("Error: Missing input fields");
+            return;
+        }
+
         const formData = {
-            rxkid: document.getElementById("rkid").value,
-            title: document.getElementById("title").value,
-            fname: document.getElementById("fname").value,
-            sname: document.getElementById("sname").value,
-            address: document.getElementById("address").value,
-            postcode: document.getElementById("postcode").value, // Ensure unique ID for Post Code
-            mobilephone: document.getElementById("mobilephone").value,
-            homephone: document.getElementById("homephone").value, // Ensure unique ID for Home Number
-            problem: document.getElementById("problem").value,
+            rxkid: rxkidElement.value,
+            title: titleElement.value,
+            fname: fnameElement.value,
+            sname: snameElement.value,
+            address: addressElement.value,
+            postcode: postcodeElement.value,
+            mobilephone: mobilephoneElement.value,
+            homephone: homephoneElement.value,
+            problem: problemElement.value,
         };
+
         try {
             const response = await fetch("https://flask-mvp.vercel.app/api/addpatient", {
                 method: "POST",
@@ -36,6 +55,7 @@ export default function AddPatient() {
             alert("Something went wrong. Please try again.");
         }
     };
+
 
     return (
         <Card className="max-w-2xl mx-4">
