@@ -18,7 +18,7 @@ export default function LoginPage() {
         setError(""); // Clear previous errors
 
         try {
-            const response = await fetch("https://flask-mvp.vercel.app/api/auth/login", {
+            const response = await fetch("https://flask-qga8pcv7b-kyojur0s-projects.vercel.app/api/custom-auth/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -35,7 +35,7 @@ export default function LoginPage() {
                 localStorage.setItem("userEmail", data.email);
                 localStorage.setItem("fname", data.fname);
                 localStorage.setItem("lname", data.lname);
-                router.push("/dashboard");
+                router.push("/updates");
                 alert("Valid Credentials");
             } else {
                 setError(data.detail || "Invalid credentials");

@@ -1,0 +1,74 @@
+{/*<Dialog>*/}
+{/*    <DialogTrigger asChild>*/}
+{/*        <Button variant="outline" size="sm" onClick={() => handleAssign(row)}>*/}
+{/*            Assign*/}
+{/*        </Button>*/}
+{/*    </DialogTrigger>*/}
+{/*    <DialogContent className="sm:max-w-[425px]">*/}
+{/*        <DialogHeader>*/}
+{/*            <DialogTitle>Assign Patient to Clinician</DialogTitle>*/}
+{/*        </DialogHeader>*/}
+{/*        <div className="grid gap-4 py-4">*/}
+{/*            <div className="grid grid-cols-4 items-center gap-4">*/}
+{/*                <Label htmlFor="clinician" className="text-right">*/}
+{/*                    Clinician*/}
+{/*                </Label>*/}
+{/*                <Select onValueChange={(value) => setSelectedClinician(value)}>*/}
+{/*                    <SelectTrigger className="w-[180px] col-span-3">*/}
+{/*                        <SelectValue placeholder="Select clinician" />*/}
+{/*                    </SelectTrigger>*/}
+{/*                    <SelectContent>*/}
+{/*                        {clinicians.map((c) => (*/}
+{/*                            <SelectItem key={c} value={c}>*/}
+{/*                                {c}*/}
+{/*                            </SelectItem>*/}
+{/*                        ))}*/}
+{/*                    </SelectContent>*/}
+{/*                </Select>*/}
+{/*            </div>*/}
+{/*            <div className="grid grid-cols-4 items-center gap-4">*/}
+{/*                <Label htmlFor="date" className="text-right">*/}
+{/*                    Date*/}
+{/*                </Label>*/}
+{/*                <Popover>*/}
+{/*                    <PopoverTrigger asChild>*/}
+{/*                        <Button*/}
+{/*                            variant="outline"*/}
+{/*                            className={`w-[280px] justify-start text-left font-normal col-span-3 ${*/}
+{/*                                !appointmentDate && "text-muted-foreground"*/}
+{/*                            }`}*/}
+{/*                        >*/}
+{/*                            <Calendar className="mr-2 h-4 w-4" />*/}
+{/*                            {appointmentDate ? format(appointmentDate, "PPP") : <span>Pick a date</span>}*/}
+{/*                        </Button>*/}
+{/*                    </PopoverTrigger>*/}
+{/*                    <PopoverContent className="w-auto p-0">*/}
+{/*                        <CalendarComponent*/}
+{/*                            mode="single"*/}
+{/*                            selected={appointmentDate}*/}
+{/*                            onSelect={setAppointmentDate}*/}
+{/*                            initialFocus*/}
+{/*                        />*/}
+{/*                    </PopoverContent>*/}
+{/*                </Popover>*/}
+{/*            </div>*/}
+{/*            <div className="grid grid-cols-4 items-center gap-4">*/}
+{/*                <Label htmlFor="time" className="text-right">*/}
+{/*                    Time*/}
+{/*                </Label>*/}
+{/*                <Input*/}
+{/*                    id="time"*/}
+{/*                    type="time"*/}
+{/*                    value={appointmentTime}*/}
+{/*                    onChange={(e) => setAppointmentTime(e.target.value)}*/}
+{/*                    className="col-span-3"*/}
+{/*                />*/}
+{/*            </div>*/}
+{/*        </div>*/}
+{/*        <DialogFooter>*/}
+{/*            <Button type="submit" onClick={() => confirmAssignment(selectedClinician)}>*/}
+{/*                Confirm Assignment*/}
+{/*            </Button>*/}
+{/*        </DialogFooter>*/}
+{/*    </DialogContent>*/}
+{/*</Dialog>*/}

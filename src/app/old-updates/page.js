@@ -5,12 +5,15 @@ import { useRouter } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { CalendarIcon, ActivityIcon, FileTextIcon, UsersIcon, LayoutDashboardIcon } from "lucide-react"
-import { fetchData } from "@/app/updates/utils/utils"
-import AllList from "@/app/updates/services/patients/allPatients";
-import useRole from "@/hooks/useRole";
+import AddPatient from "@/app/old-updates/utils/addPatient"
+import AllList from "@/app/old-updates/utils/allPatients"
+import ProcedureList from "@/app/old-updates/utils/procedures"
+// import DischargeList from "@/app/dashboard/components/dischargedPatients"
+import WaitingList from "@/app/old-updates/utils/waitingList"
+import { fetchData } from "@/app/old-updates/utils/utils"
 
 export default function Dashboard() {
-    const role = useRole();
+    const [role, setRole] = useState("")
     const [email, setEmail] = useState("")
     const [stats, setStats] = useState({})
     const [cli, setCli] = useState([])
@@ -19,11 +22,17 @@ export default function Dashboard() {
     const router = useRouter()
 
     useEffect(() => {
+        const storedRole = localStorage.getItem("userRole")
         const storedEmail = localStorage.getItem("userEmail")
         const storedFname = localStorage.getItem("fname")
-        setEmail(storedEmail)
-        setFname(storedFname)
-    }, [])
+        if (!storedRole) {
+            router.push("/auth/login")
+        } else {
+            setRole(storedRole)
+            setEmail(storedEmail)
+            setFname(storedFname)
+        }
+    }, [router])
 
     useEffect(() => {
         const fetchClinicians = async () => {
@@ -106,6 +115,10 @@ export default function Dashboard() {
                 <Tabs defaultValue="all-list" className="space-y-4">
                     <TabsList className="grid w-full grid-cols-4 lg:grid-cols-5 h-auto">
                         <TabsTrigger value="all-list">All Patients</TabsTrigger>
+                        <TabsTrigger value="total-waiting-list">Waiting List</TabsTrigger>
+                        <TabsTrigger value="procedures">Procedures</TabsTrigger>
+                        <TabsTrigger value="discharged">Discharged</TabsTrigger>
+                        {(role === "Admin" || role === "Super User") && <TabsTrigger value="add-patient">Add Patient</TabsTrigger>}
                     </TabsList>
                     <TabsContent value="all-list">
                         <Card>
@@ -117,8 +130,49 @@ export default function Dashboard() {
                             </CardContent>
                         </Card>
                     </TabsContent>
+                    <TabsContent value="total-waiting-list">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Waiting List</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <WaitingList />
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
+                    <TabsContent value="procedures">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Ongoing Procedures</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <ProcedureList />
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
+                    <TabsContent value="discharged">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Discharged Patients</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                {/*<DischargeList />*/}
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
+                    {(role === "Admin" || role === "Super User") && (
+                        <TabsContent value="add-patient">
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Add New Patient</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <AddPatient />
+                                </CardContent>
+                            </Card>
+                        </TabsContent>
+                    )}
                 </Tabs>
-
             </main>
 
             <footer className="border-t bg-muted">
@@ -129,3 +183,4 @@ export default function Dashboard() {
         </div>
     )
 }
+
