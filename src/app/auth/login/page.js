@@ -18,7 +18,7 @@ export default function LoginPage() {
         setError(""); // Clear previous errors
 
         try {
-            const response = await fetch("https://flask-qga8pcv7b-kyojur0s-projects.vercel.app/api/custom-auth/login", {
+            const response = await fetch("https://flask-nine-green.vercel.app/api/custom-auth/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

@@ -12,7 +12,7 @@ import { CalendarIcon, ActivityIcon, FileTextIcon, UsersIcon, LayoutDashboardIco
 //import WaitingList from "@/app/updates/utils/waitingList"
 import { fetchData } from "@/app/updates/utils/utils"
 import AllList from "@/app/updates/services/patients/allPatients";
-import useRole from "@/hooks/useRole";
+import useRole from "@/hooks/useUser";
 
 export default function Dashboard() {
     const role = useRole();
