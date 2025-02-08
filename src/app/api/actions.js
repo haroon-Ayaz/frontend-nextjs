@@ -1,7 +1,7 @@
 // src/app/api/actions.js
 "use server";
 
-import { fetchApiData } from "./api";
+import { fetchApiData, sendApiData } from "./api";
 
 const BASE_API_URL = process.env.UPDATE_API;
 
@@ -15,4 +15,8 @@ export async function getStatistics() {
 
 export async function getPatients() {
     return await fetchApiData(`${BASE_API_URL}/api/getdata`);
+}
+
+export async function assignPatient() {
+    return await sendApiData(`${BASE_API_URL}/api/assignpatient`);
 }

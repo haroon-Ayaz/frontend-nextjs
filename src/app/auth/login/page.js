@@ -35,7 +35,7 @@ export default function LoginPage() {
                 localStorage.setItem("userEmail", data.email);
                 localStorage.setItem("fname", data.fname);
                 localStorage.setItem("lname", data.lname);
-                router.push("/updates");
+                router.push("/dashboard");
                 alert("Valid Credentials");
             } else {
                 setError(data.detail || "Invalid credentials");

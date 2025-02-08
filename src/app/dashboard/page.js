@@ -8,6 +8,8 @@ import useCurrentUser from "@/hooks/useUser";
 import { getStatistics, getClinicians } from "@/app/api/actions";
 import { useQuery } from "@tanstack/react-query";
 import StatsCard from "@/app/dashboard/components/StatsCard";
+import AllPatientsList from "@/app/dashboard/service/patient/AllPatientsList";
+import { SkeletonLoader } from "@/app/dashboard/components/SkeletonLoader";
 
 export default function Dashboard() {
   const { role, email, fname } = useCurrentUser();
@@ -33,7 +35,8 @@ export default function Dashboard() {
   });
 
   if (!role || loadingStats || loadingClinicians) {
-    return <div className="flex items-center justify-center h-screen">Loading...</div>;
+//    return <div className="flex items-center justify-center h-screen">Loading...</div>;
+      return <SkeletonLoader />
   }
 
   if (errorStats || errorClinicians) {
@@ -107,7 +110,7 @@ export default function Dashboard() {
                 <CardTitle>All Patients</CardTitle>
               </CardHeader>
               <CardContent>
-                {/*<AllList />*/}
+                <AllPatientsList />
               </CardContent>
             </Card>
           </TabsContent>
