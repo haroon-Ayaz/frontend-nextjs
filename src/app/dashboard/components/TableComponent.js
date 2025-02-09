@@ -34,7 +34,7 @@ export default function TableComponent({ columns, data, role, clinicians, onAssi
   // Decide which columns to show based on view mode.
   const columnsArray = Array.isArray(columns) ? columns : Object.values(columns)
   const compactColumns = columnsArray.filter(
-    (col) => col && ["rxkid", "fname", "sname", "problem"].includes(col.id)
+    (col) => col && ["rxkid", "fname", "sname", "problem", "showDetails"].includes(col.id)
   )
   const activeColumns = viewMode === "compact" ? compactColumns : columnsArray
 

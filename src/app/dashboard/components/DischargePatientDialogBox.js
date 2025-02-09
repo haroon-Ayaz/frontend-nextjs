@@ -6,8 +6,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { AlertCircle, CheckCircle2 } from "lucide-react"
+import { AlertCircle, CheckCircle2, UserRound, Calendar, ClipboardList, Pill } from "lucide-react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Separator } from "@/components/ui/separator"
 
 export function DischargePatientDialogBox({ patientName, patientId, admissionDate, onDischarge }) {
     const [isOpen, setIsOpen] = useState(false)
@@ -33,89 +35,104 @@ export function DischargePatientDialogBox({ patientName, patientId, admissionDat
 
     return (
         <>
-            <Button onClick={() => setIsOpen(true)} variant="outline" size="sm">
+            <Button onClick={() => setIsOpen(true)} variant="outline" size="sm" className="flex items-center gap-2">
+                <UserRound size={16} />
                 Discharge Patient
             </Button>
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
-                <DialogContent className="sm:max-w-[425px]">
+                <DialogContent className="sm:max-w-[525px]">
                     <DialogHeader>
-                        <DialogTitle>Discharge Patient</DialogTitle>
+                        <DialogTitle className="text-2xl font-bold flex items-center gap-2">
+                            <UserRound size={24} />
+                            Discharge Patient
+                        </DialogTitle>
                     </DialogHeader>
-                    <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label className="text-right">Patient Name</Label>
-                            <div className="col-span-3 font-medium">{patientName}</div>
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label className="text-right">Patient ID</Label>
-                            <div className="col-span-3 font-medium">{patientId}</div>
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label className="text-right">Admission Date</Label>
-                            <div className="col-span-3 font-medium">{admissionDate}</div>
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label className="text-right">Discharge?</Label>
-                            <RadioGroup
-                                className="col-span-3"
-                                onValueChange={(value) => setDischargeConfirmed(value)}
-                            >
-                                <div className="flex items-center space-x-2">
-                                    <RadioGroupItem value="yes" id="yes" />
-                                    <Label htmlFor="yes">Yes</Label>
+                    <ScrollArea className="max-h-[60vh] overflow-y-auto pr-4">
+                        <div className="space-y-6">
+                            <div className="grid gap-4">
+                                <div className="flex items-center gap-2">
+                                    <UserRound size={18} className="text-muted-foreground" />
+                                    <Label className="text-muted-foreground">Patient Name</Label>
+                                    <div className="font-medium">{patientName}</div>
                                 </div>
-                                <div className="flex items-center space-x-2">
-                                    <RadioGroupItem value="no" id="no" />
-                                    <Label htmlFor="no">No</Label>
+                                <Separator />
+                                <div className="flex items-center gap-2">
+                                    <ClipboardList size={18} className="text-muted-foreground" />
+                                    <Label className="text-muted-foreground">Patient ID</Label>
+                                    <div className="font-medium">{patientId}</div>
                                 </div>
-                            </RadioGroup>
+                                <Separator />
+                                <div className="flex items-center gap-2">
+                                    <Calendar size={18} className="text-muted-foreground" />
+                                    <Label className="text-muted-foreground">Admission Date</Label>
+                                    <div className="font-medium">{admissionDate}</div>
+                                </div>
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label className="text-lg font-semibold">Confirm Discharge</Label>
+                                <RadioGroup onValueChange={(value) => setDischargeConfirmed(value)} className="flex gap-4">
+                                    <div className="flex items-center space-x-2">
+                                        <RadioGroupItem value="yes" id="yes" />
+                                        <Label htmlFor="yes">Yes</Label>
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                        <RadioGroupItem value="no" id="no" />
+                                        <Label htmlFor="no">No</Label>
+                                    </div>
+                                </RadioGroup>
+                            </div>
+
+                            {dischargeConfirmed === "yes" && (
+                                <>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="remarks" className="text-lg font-semibold flex items-center gap-2">
+                                            <ClipboardList size={18} />
+                                            Clinician Remarks
+                                        </Label>
+                                        <Textarea
+                                            id="remarks"
+                                            placeholder="Enter any additional remarks..."
+                                            value={remarks}
+                                            onChange={(e) => setRemarks(e.target.value)}
+                                            className="min-h-[100px]"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="medication" className="text-lg font-semibold flex items-center gap-2">
+                                            <Pill size={18} />
+                                            Medication Instructions
+                                        </Label>
+                                        <Textarea
+                                            id="medication"
+                                            placeholder="Enter medication instructions..."
+                                            value={medicationInstructions}
+                                            onChange={(e) => setMedicationInstructions(e.target.value)}
+                                            className="min-h-[100px]"
+                                        />
+                                    </div>
+                                </>
+                            )}
                         </div>
-                        {dischargeConfirmed === "yes" && (
-                            <>
-                                <div className="grid grid-cols-4 items-center gap-4">
-                                    <Label htmlFor="remarks" className="text-right">
-                                        Clinician Remarks
-                                    </Label>
-                                    <Textarea
-                                        id="remarks"
-                                        placeholder="Enter any additional remarks..."
-                                        value={remarks}
-                                        onChange={(e) => setRemarks(e.target.value)}
-                                        className="col-span-3"
-                                    />
-                                </div>
-                                <div className="grid grid-cols-4 items-center gap-4">
-                                    <Label htmlFor="medication" className="text-right">
-                                        Medication Instructions
-                                    </Label>
-                                    <Textarea
-                                        id="medication"
-                                        placeholder="Enter medication instructions..."
-                                        value={medicationInstructions}
-                                        onChange={(e) => setMedicationInstructions(e.target.value)}
-                                        className="col-span-3"
-                                    />
-                                </div>
-                            </>
-                        )}
-                    </div>
-                    <DialogFooter>
+                    </ScrollArea>
+                    <DialogFooter className="mt-6">
                         <Button
                             onClick={handleDischarge}
                             disabled={dischargeConfirmed !== "yes" || !remarks || !medicationInstructions}
+                            className="w-full sm:w-auto"
                         >
                             Confirm Discharge
                         </Button>
                     </DialogFooter>
                     {dischargeSuccess && (
-                        <Alert>
+                        <Alert className="mt-4">
                             <CheckCircle2 className="h-4 w-4" />
                             <AlertTitle>Success</AlertTitle>
                             <AlertDescription>Patient has been successfully discharged.</AlertDescription>
                         </Alert>
                     )}
                     {dischargeError && (
-                        <Alert variant="destructive">
+                        <Alert variant="destructive" className="mt-4">
                             <AlertCircle className="h-4 w-4" />
                             <AlertTitle>Error</AlertTitle>
                             <AlertDescription>{dischargeError}</AlertDescription>
@@ -126,4 +143,3 @@ export function DischargePatientDialogBox({ patientName, patientId, admissionDat
         </>
     )
 }
-

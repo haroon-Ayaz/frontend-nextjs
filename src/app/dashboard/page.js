@@ -12,6 +12,7 @@ import WaitingList from "@/app/dashboard/service/patient/WaitingList"
 import { SkeletonLoader } from "@/app/dashboard/components/SkeletonLoader"
 import AddPatient from "@/app/dashboard/components/AddPatient"
 import DischargePatient from "@/app/dashboard/service/clinician/ProceduresPatients"
+import DischargePatientsList from "@/app/dashboard/service/DischargePatients";
 
 export default function Dashboard() {
   const { role, email, fname } = useCurrentUser()
@@ -145,7 +146,7 @@ export default function Dashboard() {
                   <CardHeader>
                     <CardTitle>Discharged Patients</CardTitle>
                   </CardHeader>
-                  <CardContent>{/* <DischargeList /> */}</CardContent>
+                  <CardContent><DischargePatientsList /></CardContent>
                 </Card>
               </TabsContent>
               {(role === "Admin" || role === "Super User") && (

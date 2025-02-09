@@ -17,6 +17,10 @@ export async function getPatients() {
   return await fetchApiData(`${BASE_API_URL}/api/getdata`);
 }
 
+export async function getDischargedPatients() {
+  return await fetchApiData(`${BASE_API_URL}/api/get_discharged_patients`)
+}
+
 /**
  * assignPatient now accepts an object containing patient_id and assigned_to,
  * and sends a POST request to the assignpatient endpoint.
@@ -90,5 +94,5 @@ export async function handlePatientAssignment({ patient_id, assigned_to, recipie
 
 
 export async function addPatient() {
-  
+
 }
