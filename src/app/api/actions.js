@@ -3,7 +3,7 @@
 
 import { fetchApiData, sendApiData } from "./api";
 
-const BASE_API_URL = process.env.UPDATE_API;
+const BASE_API_URL = "https://flask-nine-green.vercel.app";
 
 export async function getClinicians() {
   return await fetchApiData(`${BASE_API_URL}/api/get_clinicians`);
