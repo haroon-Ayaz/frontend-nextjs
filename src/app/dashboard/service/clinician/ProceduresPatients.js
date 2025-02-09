@@ -1,16 +1,14 @@
+// updates/utils/waitingList.js
 import React, { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useRouter } from "next/navigation";
 import TableComponent from "@/app/dashboard/components/TableComponent";
+import { SkeletonLoader } from "@/app/dashboard/components/SkeletonLoader";
+import { DischargePatientDialogBox } from "@/app/dashboard/components/DischargePatientDialogBox";
+import useCurrentUser from "@/hooks/useUser";
 import { useQuery } from "@tanstack/react-query";
 import { getPatients, getClinicians } from "@/app/api/actions";
-import useCurrentUser from "@/hooks/useUser";
-import { TableActionsContext } from "@/context/TableActionsContext";
-import { AssignPatientDialog } from "@/app/dashboard/components/AssignPatient";
-import { SkeletonLoader } from "@/app/dashboard/components/SkeletonLoader";
 import { baseColumns } from "@/app/dashboard/utils/template";
 
-export default function WaitingList() {
+export default function DischargePatient() {
     const { role, email, fname } = useCurrentUser();
 
     const {
@@ -37,34 +35,33 @@ export default function WaitingList() {
         return <SkeletonLoader />
     }
 
-    // const baseColumns = [
-    //     { id: "rxkid", label: "RXK ID" },
-    //     { id: "title", label: "Title" },
-    //     { id: "fname", label: "First Name" },
-    //     { id: "lname", label: "Last Name" },
-    //     { id: "address", label: "Address" },
-    //     { id: "postcode", label: "Post Code" },
-    //     { id: "phone_number", label: "Phone Number" },
-    //     { id: "home_number", label: "Home Number" },
-    //     { id: "problem", label: "Problem" }
-    // ];
+    // Define the dischargePatient function
+    const dischargePatient = (patientId, remarks, medicationInstructions) => {
+        // Implement the logic to discharge a patient
+        console.log(`Discharging patient ${patientId} with remarks: ${remarks} and medication instructions: ${medicationInstructions}`);
+        // You might want to call an API or update the state here
+    };
 
     // Only add the "assignto" column if the role is "Admin" or "Super User"
-    const waitingListColumns = [
+    const columns = [
         ...baseColumns,
         ...(role === "Admin" || role === "Super User" ? [{
-            id: "assignto",
-            label: "Assign To",
+            id: "dischargePatient",
+            label: "Discharge Patient",
             render: (row, clinicians) => (
-                <AssignPatientDialog patient={row} />
+                <DischargePatientDialogBox
+                    patientName={`${row.fname} ${row.lname}`}
+                    patientId={row.rxkid}
+                    admissionDate={row.admissionDate}
+                    onDischarge={dischargePatient}
+                />
             )
         }] : [])
     ];
 
-
     return (
         <TableComponent
-            columns={waitingListColumns}
+            columns={columns}
             data={patientList}
             role={role}
         />

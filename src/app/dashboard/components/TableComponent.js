@@ -5,15 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import { Calendar } from "@/components/ui/calendar"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
-import { cn } from "@/lib/utils"
-import { format } from "date-fns"
-import { CalendarIcon } from 'lucide-react'
 import FilterBar from "@/app/dashboard/components/DataTable/FilterBar"
 import Pagination from "@/app/dashboard/components/DataTable/Pagination"
 import useFilters from "@/hooks/useFilters";
@@ -22,25 +13,22 @@ import DataTable from "@/app/dashboard/components/DataTable/DataTable";
 
 export default function TableComponent({ columns, data, role, clinicians, onAssignPatient }) {
   const [viewMode, setViewMode] = React.useState("standard")
-  const [selectedPatient, setSelectedPatient] = React.useState(null)
-  const [appointmentDate, setAppointmentDate] = React.useState(new Date())
-  const [appointmentTime, setAppointmentTime] = React.useState("")
 
   // Move the useFilters hook call above the filteredData useMemo
   const { filters, addFilter, updateFilter, removeFilter } = useFilters();
 
-    const filteredData = React.useMemo(() => {
-      if (!Array.isArray(data)) return [];
-      return data.filter((row) =>
-        Object.values(filters).every((filter) => {
-          const rowValue = row[filter.column];
-          return rowValue && String(rowValue).toLowerCase().includes(filter.value.toLowerCase());
-        })
-      );
-    }, [data, filters]);
+  const filteredData = React.useMemo(() => {
+    if (!Array.isArray(data)) return [];
+    return data.filter((row) =>
+      Object.values(filters).every((filter) => {
+        const rowValue = row[filter.column];
+        return rowValue && String(rowValue).toLowerCase().includes(filter.value.toLowerCase());
+      })
+    );
+  }, [data, filters]);
 
-    const itemsPerPage = 10;
-    const { currentPage, setCurrentPage, totalPages, paginatedData } = usePagination(filteredData, itemsPerPage);
+  const itemsPerPage = 10;
+  const { currentPage, setCurrentPage, totalPages, paginatedData } = usePagination(filteredData, itemsPerPage);
 
 
   // Decide which columns to show based on view mode.
@@ -49,12 +37,6 @@ export default function TableComponent({ columns, data, role, clinicians, onAssi
     (col) => col && ["rxkid", "fname", "sname", "problem"].includes(col.id)
   )
   const activeColumns = viewMode === "compact" ? compactColumns : columnsArray
-
-  // Handler for opening the assignment dialog.
-  const handleAssign = (patient) => {
-    setSelectedPatient(patient)
-  }
-
 
 
   return (
