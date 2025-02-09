@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { CalendarIcon, ActivityIcon, FileTextIcon, UsersIcon, LayoutDashboardIcon } from "lucide-react"
 import useCurrentUser from "@/hooks/useUser"
-import { getStatistics, getClinicians } from "@/app/api/actions"
+import { getStatistics, getClinicians, getPatients } from "@/app/api/actions"
 import { useQuery } from "@tanstack/react-query"
 import StatsCard from "@/app/dashboard/components/StatsCard"
 import AllPatientsList from "@/app/dashboard/service/AllPatientsList"
@@ -13,6 +13,7 @@ import { SkeletonLoader } from "@/app/dashboard/components/SkeletonLoader"
 import AddPatient from "@/app/dashboard/components/AddPatient"
 import DischargePatient from "@/app/dashboard/service/clinician/ProceduresPatients"
 import DischargePatientsList from "@/app/dashboard/service/DischargePatients";
+import Link from "next/link";
 
 export default function Dashboard() {
   const { role, email, fname } = useCurrentUser()
@@ -26,6 +27,19 @@ export default function Dashboard() {
     queryFn: getStatistics,
     refetchInterval: 2000,
   })
+
+  const {
+    data: patients,
+    isLoading: loadingPatients,
+    error: errorPatients,
+  } = useQuery({
+    queryKey: ["patients"],
+    queryFn: getPatients,
+    refetchInterval: 2000,
+  })
+
+
+  console.log("Patients are: ", patients)
 
   const {
     data: clinicians,
@@ -91,9 +105,53 @@ export default function Dashboard() {
         {/* Stats Section - Fixed height, independent of other content */}
         <div className="py-6 bg-background relative z-40">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            {statsData.map((stat, index) => (
-              <StatsCard key={index} {...stat} />
-            ))}
+            {statsData.map((stat, index) => {
+              const card = <StatsCard key={index} {...stat} />;
+              if (stat.title === "Waiting List") {
+                return (
+                  <Link href="/test/wlp" key={index}>
+                    {card}
+                  </Link>
+                );
+              } else if (stat.title === "Active Clinicians") {
+                return (
+                  <Link href="/test/cli" key={index}>
+                    {card}
+                  </Link>
+                );
+              }
+              return card;
+            })}
+
+
+            {/* <StatsCard
+              title={statsData[0].title}
+              value={statsData[0].value}
+              icon={statsData[0].Icon}
+              subtext={statsData[0].subtext}
+            /> */}
+
+            {/* <StatsCard
+              title={statsData[1].title}
+              value={statsData[1].value}
+              icon={statsData[1].Icon}
+              subtext={statsData[1].subtext}
+            />
+
+            <StatsCard
+              title={statsData[2].title}
+              value={statsData[2].value}
+              icon={statsData[2].Icon}
+              subtext={statsData[2].subtext}
+            />
+
+            <StatsCard
+              title={statsData[3].title}
+              value={statsData[3].value}
+              icon={statsData[3].Icon}
+              subtext={statsData[3].subtext}
+            /> */}
+
           </div>
         </div>
 
