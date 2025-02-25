@@ -3,7 +3,7 @@
 
 import { fetchApiData, sendApiData } from "./api";
 
-const BASE_API_URL = "https://flask-nine-green.vercel.app/";
+const BASE_API_URL = "https://flask-nine-green.vercel.app";
 
 export async function getClinicians() {
   return await fetchApiData(`${BASE_API_URL}/api/v2/get_clinicians`);
@@ -25,11 +25,10 @@ export async function getCustomPatientDataSet({ key_code }) {
   const url = `${BASE_API_URL}/api/v2/custom_data_fetching`;
   return await sendApiData(
     url,
-    { method: "GET", headers: { "Content-Type": "application/json" } },
+    { method: "POST", headers: { "Content-Type": "application/json" } },
     { key_code }
   );
 }
-
 
 export async function getDischargedPatients() {
   return await fetchApiData(`${BASE_API_URL}/api/v2/get_discharged_patients`)
@@ -116,7 +115,7 @@ export async function getPatientCallLogs({ patient_rxkid }) {
     // Use sendApiData to include a JSON body with rxkid in the options parameter.
     return await sendApiData(
       url,
-      { method: "GET", headers: { "Content-Type": "application/json" } },
+      { method: "POST", headers: { "Content-Type": "application/json" } },
       { rxkid: patient_rxkid }
     );
   } catch (error) {

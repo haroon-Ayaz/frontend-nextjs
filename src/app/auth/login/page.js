@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useRouter } from "next/navigation";
-import {useState} from "react";
+import { useState } from "react";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -35,7 +35,7 @@ export default function LoginPage() {
                 localStorage.setItem("userEmail", data.email);
                 localStorage.setItem("fname", data.fname);
                 localStorage.setItem("lname", data.lname);
-                router.push("/dashboard");
+                router.push("/dashboard-testing");
                 alert("Valid Credentials");
             } else {
                 setError(data.detail || "Invalid credentials");
@@ -49,7 +49,7 @@ export default function LoginPage() {
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-md flex flex-col items-center">
-                <img className="mx-auto h-32 w-auto" src="/nhs-logo.png" alt="NHS Logo"/>
+                <img className="mx-auto h-32 w-auto" src="/nhs-logo.png" alt="NHS Logo" />
                 <h2 className="mt-4 text-center text-3xl font-extrabold text-gray-900">Please Sign In</h2>
             </div>
 
@@ -123,7 +123,7 @@ export default function LoginPage() {
                     <div className="mt-6">
                         <div className="relative">
                             <div className="absolute inset-0 flex items-center">
-                                <div className="w-full border-t border-gray-300"/>
+                                <div className="w-full border-t border-gray-300" />
                             </div>
                             <div className="relative flex justify-center text-sm">
                                 <span className="px-2 bg-white text-gray-500">Or</span>

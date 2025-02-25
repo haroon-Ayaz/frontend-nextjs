@@ -7,10 +7,9 @@ import {
     CancerIcon,
     Over13WeeksIcon,
     ShortNoticeIcon,
-    CommentIcon,
-    // PhoneIcon,
 } from "@/app/dashboard-testing/components/IconComponents"
 import { PhoneIcon } from "@/app/dashboard-testing/components/icons/PhoneIcons"
+import { CommentIcon } from "@/app/dashboard-testing/components/icons/CommentIcon"
 
 export const PatientDetailsButton = ({ patient }) => {
     const [open, setOpen] = useState(false)
@@ -36,7 +35,6 @@ export const baseColumns = [
                 <ShortNoticeIcon isShortNotice={row.short_notice_flag === "Y"} />
                 <CommentIcon comments={row.comment} onAddComment={(comment) => extraProps.onAddComment(row.id, comment)} />
                 <PhoneIcon patient_rxkid="RXK100000" onCall={(time) => extraProps.onLogCall(row.id, time)} />
-                {/* <PhoneIcon lastCallTime={row.lastCallTime} onCall={(time) => extraProps.onLogCall(row.id, time)} /> */}
             </div>
         ),
     },

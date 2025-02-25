@@ -27,13 +27,6 @@ export default function SignUpPage() {
             return;
         }
 
-        console.log("Data to be send is as follows")
-        console.log(password)
-        console.log(email)
-        console.log(fname)
-        console.log(lname)
-        console.log(role)
-
         try {
             const response = await fetch("https://flask-qga8pcv7b-kyojur0s-projects.vercel.app/api/custom-auth/signup", {
                 method: "POST",
