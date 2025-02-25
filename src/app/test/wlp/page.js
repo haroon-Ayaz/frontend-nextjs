@@ -8,7 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import { Clock, User, Stethoscope, Activity, Filter } from "lucide-react"
 import { useEffect, useState } from "react"
-import TableComponent from "@/app/dashboard/components/TableComponent"
+import TableComponent from "@/app/dashboard-testing/components/TableComponent"
 import { Progress } from "@/components/ui/progress"
 import { Calendar, TrendingUp } from "lucide-react"
 

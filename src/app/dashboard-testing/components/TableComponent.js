@@ -5,20 +5,30 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import FilterBar from "@/app/dashboard/components/DataTable/FilterBar"
-import Pagination from "@/app/dashboard/components/DataTable/Pagination"
+import FilterBar from "@/app/dashboard-testing/components/DataTable/FilterBar"
+import Pagination from "@/app/dashboard-testing/components/DataTable/Pagination"
 import useFilters from "@/hooks/useFilters";
 import usePagination from "@/hooks/usePagination";
-import DataTable from "@/app/dashboard/components/DataTable/DataTable";
+import DataTable from "@/app/dashboard-testing/components/DataTable/DataTable";
 
 export default function TableComponent({ columns, data, role, clinicians, onAssignPatient }) {
   const [viewMode, setViewMode] = React.useState("standard")
+
+  const handleAddComment = (patientId, comment) => {
+    // Logic to add a comment to a patient
+  };
+
+  const handleLogCall = (patientId, time) => {
+    // Logic to log a call for a patient
+  };
 
   // Move the useFilters hook call above the filteredData useMemo
   const { filters, addFilter, updateFilter, removeFilter } = useFilters();
 
   const filteredData = React.useMemo(() => {
-    if (!Array.isArray(data)) return [];
+    if (!Array.isArray(data)) {
+      return []
+    };
     return data.filter((row) =>
       Object.values(filters).every((filter) => {
         const rowValue = row[filter.column];
@@ -32,11 +42,11 @@ export default function TableComponent({ columns, data, role, clinicians, onAssi
 
 
   // Decide which columns to show based on view mode.
-  const columnsArray = Array.isArray(columns) ? columns : Object.values(columns)
+  const columnsArray = Array.isArray(columns) ? columns : Object.values(columns);
   const compactColumns = columnsArray.filter(
-    (col) => col && ["rxkid", "fname", "sname", "problem", "showDetails"].includes(col.id)
-  )
-  const activeColumns = viewMode === "compact" ? compactColumns : columnsArray
+    (col) => col && ["id", "actions", "rxkid", "forename", "surname", "showDetails"].includes(col.id)
+  );
+  const activeColumns = viewMode === "compact" ? compactColumns : columnsArray;
 
 
   return (
@@ -82,6 +92,10 @@ export default function TableComponent({ columns, data, role, clinicians, onAssi
           columns={activeColumns}
           data={paginatedData}
           role={role}
+          extraProps={{
+            onAddComment: handleAddComment,
+            onLogCall: handleLogCall,
+          }}
         />
 
         <Pagination

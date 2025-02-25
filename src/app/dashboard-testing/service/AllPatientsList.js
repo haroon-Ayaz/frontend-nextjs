@@ -1,10 +1,8 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getPatients } from "@/app/api/actions";
-import TableComponent from "@/app/dashboard/components/TableComponent";
-import { PatientDetailsDialog } from "../components/PatientDetialsDialogBox";
-import { Button } from "@/components/ui/button";
-import { baseColumns } from "@/app/dashboard/utils/template";
+import TableComponent from "@/app/dashboard-testing/components/TableComponent";
+import { baseColumns } from "@/app/dashboard-testing/utils/template";
 
 export default function AllPatientsList() {
     const {
@@ -19,10 +17,8 @@ export default function AllPatientsList() {
 
     const allColumns = [
         ...baseColumns,
-        { id: "assignto", label: "Assign To" },
-        { id: "status", label: "Status" }
+        // { id: "assignto", label: "Assign To" },
     ]
-
 
     return (
         <TableComponent

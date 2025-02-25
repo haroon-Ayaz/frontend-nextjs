@@ -1,12 +1,12 @@
 // updates/utils/waitingList.js
 import React, { useEffect, useState } from "react";
-import TableComponent from "@/app/dashboard/components/TableComponent";
-import { SkeletonLoader } from "@/app/dashboard/components/SkeletonLoader";
-import { DischargePatientDialogBox } from "@/app/dashboard/components/DischargePatientDialogBox";
+import TableComponent from "@/app/dashboard-testing/components/TableComponent";
+import { SkeletonLoader } from "@/app/dashboard-testing/components/SkeletonLoader";
+import { DischargePatientDialogBox } from "@/app/dashboard-testing/components/DischargePatientDialogBox";
 import useCurrentUser from "@/hooks/useUser";
 import { useQuery } from "@tanstack/react-query";
 import { getPatients, getClinicians } from "@/app/api/actions";
-import { baseColumns } from "@/app/dashboard/utils/template";
+import { baseColumns } from "@/app/dashboard-testing/utils/template";
 
 export default function DischargePatient() {
     const { role, email, fname } = useCurrentUser();

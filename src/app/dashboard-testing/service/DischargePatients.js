@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
-import TableComponent from "@/app/dashboard/components/TableComponent";
+import TableComponent from "@/app/dashboard-testing/components/TableComponent";
 import { useQuery } from "@tanstack/react-query";
-import { getPatients, getClinicians } from "@/app/api/actions";
+import { getPatients, getClinicians, getDischargedPatients } from "@/app/api/actions";
 import useCurrentUser from "@/hooks/useUser";
 import { TableActionsContext } from "@/context/TableActionsContext";
-import { AssignPatientDialog } from "@/app/dashboard/components/AssignPatient";
-import { SkeletonLoader } from "@/app/dashboard/components/SkeletonLoader";
-import { baseColumns } from "@/app/dashboard/utils/template";
+import { AssignPatientDialog } from "@/app/dashboard-testing/components/AssignPatient";
+import { SkeletonLoader } from "@/app/dashboard-testing/components/SkeletonLoader";
+import { baseColumns } from "@/app/dashboard-testing/utils/template";
 
-export default function WaitingList() {
+export default function DischargePatientsList() {
     const { role, email, fname } = useCurrentUser();
 
     const {
@@ -19,7 +19,7 @@ export default function WaitingList() {
         error: errorStats,
     } = useQuery({
         queryKey: ["patients"],
-        queryFn: getPatients,
+        queryFn: getDischargedPatients,
         refetchInterval: 2000,
     });
 
@@ -50,21 +50,21 @@ export default function WaitingList() {
     // ];
 
     // Only add the "assignto" column if the role is "Admin" or "Super User"
-    const waitingListColumns = [
-        ...baseColumns,
-        ...(role === "Admin" || role === "Super User" ? [{
-            id: "assignto",
-            label: "Assign To",
-            render: (row, clinicians) => (
-                <AssignPatientDialog patient={row} />
-            )
-        }] : [])
-    ];
+    // const waitingListColumns = [
+    //     ...baseColumns,
+    //     ...(role === "Admin" || role === "Super User" ? [{
+    //         id: "assignto",
+    //         label: "Assign To",
+    //         render: (row, clinicians) => (
+    //             <AssignPatientDialog patient={row} />
+    //         )
+    //     }] : [])
+    // ];
 
 
     return (
         <TableComponent
-            columns={waitingListColumns}
+            columns={baseColumns}
             data={patientList}
             role={role}
         />

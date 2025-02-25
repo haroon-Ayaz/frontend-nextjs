@@ -3,22 +3,36 @@
 
 import { fetchApiData, sendApiData } from "./api";
 
-const BASE_API_URL = "https://flask-nine-green.vercel.app";
+const BASE_API_URL = "https://flask-nine-green.vercel.app/";
 
 export async function getClinicians() {
-  return await fetchApiData(`${BASE_API_URL}/api/get_clinicians`);
+  return await fetchApiData(`${BASE_API_URL}/api/v2/get_clinicians`);
 }
 
 export async function getStatistics() {
-  return await fetchApiData(`${BASE_API_URL}/api/get_statistics`);
+  return await fetchApiData(`${BASE_API_URL}/api/v2/get_statistics`);
 }
 
 export async function getPatients() {
-  return await fetchApiData(`${BASE_API_URL}/api/getdata`);
+  return await fetchApiData(`${BASE_API_URL}/api/v2/raw_new_test_patient`);
 }
 
+// In src/app/api/actions.js
+export async function getCustomPatientDataSet({ key_code }) {
+  if (typeof key_code !== "string" && typeof key_code !== "number") {
+    throw new Error("key_code must be a primitive value (string or number).");
+  }
+  const url = `${BASE_API_URL}/api/v2/custom_data_fetching`;
+  return await sendApiData(
+    url,
+    { method: "GET", headers: { "Content-Type": "application/json" } },
+    { key_code }
+  );
+}
+
+
 export async function getDischargedPatients() {
-  return await fetchApiData(`${BASE_API_URL}/api/get_discharged_patients`)
+  return await fetchApiData(`${BASE_API_URL}/api/v2/get_discharged_patients`)
 }
 
 /**
@@ -92,7 +106,24 @@ export async function handlePatientAssignment({ patient_id, assigned_to, recipie
   }
 }
 
-
-export async function addPatient() {
-
+export async function getPatientCallLogs({ patient_rxkid }) {
+  if (typeof patient_rxkid !== "string" && typeof patient_rxkid !== "number") {
+    throw new Error("patient_rxkid must be a primitive value (string or number).");
+  }
+  try {
+    const url = `${BASE_API_URL}/api/v2/get_call_logs`;
+    console.log("Complete URL: ", url)
+    // Use sendApiData to include a JSON body with rxkid in the options parameter.
+    return await sendApiData(
+      url,
+      { method: "GET", headers: { "Content-Type": "application/json" } },
+      { rxkid: patient_rxkid }
+    );
+  } catch (error) {
+    console.error("Error in getPatientCallLogs", error);
+    throw error;
+  }
 }
+
+
+
