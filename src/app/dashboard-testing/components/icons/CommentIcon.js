@@ -13,6 +13,10 @@ import { cn } from "@/lib/utils"
 
 const ICON_SIZE = "h-6 w-6"
 
+function addComment() {
+
+}
+
 const parseComments = (commentsString) => {
     if (!commentsString) {
         return []

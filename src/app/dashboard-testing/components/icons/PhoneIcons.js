@@ -46,12 +46,11 @@ export const PhoneIcon = ({ patient_rxkid, onCall }) => {
     });
 
     const handleSubmit = () => {
-        onCall({ call_date: callDate, call_time: callTime, admin_comment: adminComment })
+        // onCall({ patient_rxkid, call_date: callDate, call_time: callTime, admin_comment: adminComment })
+        onCall(callDate, callTime, adminComment)
         setAdminComment("")
         setIsOpen(false)
     }
-
-    console.log("Received Call Logs", callLogs)
 
     return (
         <>

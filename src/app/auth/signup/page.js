@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link"
+import Image from "next/image";
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -62,7 +63,7 @@ export default function SignUpPage() {
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-md flex flex-col items-center">
-                <img className="mx-auto h-32 w-auto" src="/nhs-logo.png" alt="NHS Logo" />
+                <Image className="mx-auto h-32 w-auto" src="/nhs-logo.png" alt="NHS Logo" />
                 <h2 className="mt-4 text-center text-3xl font-extrabold text-gray-900">Create your account</h2>
             </div>
 

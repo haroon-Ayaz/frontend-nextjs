@@ -22,7 +22,9 @@ import {
 } from "lucide-react"
 
 const formatDate = (dateString) => {
-    if (!dateString || dateString === "N/A") return "N/A"
+    if (!dateString || dateString === "N/A") {
+        return "N/A"
+    }
     try {
         return format(parseISO(dateString), "dd MMM yyyy HH:mm")
     } catch {

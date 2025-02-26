@@ -10,8 +10,12 @@ import StatsCard from "@/app/dashboard-testing/components/StatsCard"
 import AllPatientsList from "@/app/dashboard-testing/service/AllPatientsList"
 import { SkeletonLoader } from "@/app/dashboard-testing/components/SkeletonLoader"
 import Link from "next/link";
-import { Users, Calendar, ClipboardCheck, Stethoscope, UserCheck, XCircle } from "lucide-react"
+import { Users, Calendar, ClipboardCheck, Stethoscope, UserCheck, XCircle, ClipboardList } from "lucide-react"
 import DidNotAttendPatientList from "@/app/dashboard-testing/service/DidNotAttend"
+import BookedForProcedure from "@/app/dashboard-testing/service/BookedProcedures"
+import BookedForPreAssessment from "@/app/dashboard-testing/service/PreAssessment"
+import WaitingList from "@/app/dashboard-testing/service/WaitingList"
+
 
 export default function Dashboard() {
   const { role, email, fname } = useCurrentUser()
@@ -123,65 +127,92 @@ export default function Dashboard() {
 
         <div className="relative z-30 pb-6">
           <Tabs defaultValue="all-list" className="space-y-6">
-            <div className="border rounded-lg p-1 bg-white/50 backdrop-blur-sm shadow-sm">
-              <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6 h-auto gap-1">
+            <div className="border rounded-lg p-0 w-full mx-0 bg-white/50 backdrop-blur-sm shadow-sm overflow-x-auto">
+              <TabsList className="flex w-full min-w-max h-auto gap-1">
                 <TabsTrigger
-                  value="all-waiting-list"
-                  className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm flex items-center gap-2 py-3 transition-all duration-200"
+                  value="all-list"
+                  className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm flex items-center gap-2 py-3 transition-all duration-200 whitespace-nowrap"
                 >
                   <Users className="h-4 w-4" />
-                  <span className="hidden sm:inline">All Waiting List</span>
+                  <span className="hidden lg:inline">All Waiting List</span>
+                  <span className="lg:hidden">All</span>
                 </TabsTrigger>
 
                 <TabsTrigger
-                  value="did-not-attend"
-                  className="data-[state=active]:bg-destructive data-[state=active]:text-destructive-foreground data-[state=active]:shadow-sm flex items-center gap-2 py-3 transition-all duration-200"
+                  value="waiting-list"
+                  className="data-[state=active]:bg-orange-500 data-[state=active]:text-white data-[state=active]:shadow-sm flex items-center gap-2 py-3 transition-all duration-200 whitespace-nowrap"
+                >
+                  <ClipboardList className="h-4 w-4" />
+                  <span className="hidden lg:inline">Waiting List</span>
+                  <span className="lg:hidden">Waiting</span>
+                </TabsTrigger>
+
+                <TabsTrigger
+                  value="total-waiting-list"
+                  className="data-[state=active]:bg-destructive data-[state=active]:text-destructive-foreground data-[state=active]:shadow-sm flex items-center gap-2 py-3 transition-all duration-200 whitespace-nowrap"
                 >
                   <XCircle className="h-4 w-4" />
-                  <span className="hidden sm:inline">Did Not Attend</span>
+                  <span className="hidden lg:inline">Did Not Attend</span>
+                  <span className="lg:hidden">DNA</span>
                 </TabsTrigger>
 
                 <TabsTrigger
-                  value="booked-procedures"
-                  className="data-[state=active]:bg-green-600 data-[state=active]:text-white data-[state=active]:shadow-sm flex items-center gap-2 py-3 transition-all duration-200"
+                  value="procedures"
+                  className="data-[state=active]:bg-green-600 data-[state=active]:text-white data-[state=active]:shadow-sm flex items-center gap-2 py-3 transition-all duration-200 whitespace-nowrap"
                 >
                   <Calendar className="h-4 w-4" />
-                  <span className="hidden sm:inline">Booked Procedures</span>
+                  <span className="hidden lg:inline">Booked Procedures</span>
+                  <span className="lg:hidden">Booked</span>
                 </TabsTrigger>
 
                 <TabsTrigger
-                  value="pre-assessment"
-                  className="data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-sm flex items-center gap-2 py-3 transition-all duration-200"
+                  value="discharged"
+                  className="data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-sm flex items-center gap-2 py-3 transition-all duration-200 whitespace-nowrap"
                 >
                   <ClipboardCheck className="h-4 w-4" />
-                  <span className="hidden sm:inline">Pre-Assessment</span>
+                  <span className="hidden lg:inline">Pre-Assessment</span>
+                  <span className="lg:hidden">Pre-Assess</span>
                 </TabsTrigger>
 
                 <TabsTrigger
-                  value="ongoing-procedures"
-                  className="data-[state=active]:bg-amber-600 data-[state=active]:text-white data-[state=active]:shadow-sm flex items-center gap-2 py-3 transition-all duration-200"
+                  value="add-patient"
+                  className="data-[state=active]:bg-amber-600 data-[state=active]:text-white data-[state=active]:shadow-sm flex items-center gap-2 py-3 transition-all duration-200 whitespace-nowrap"
                 >
                   <Stethoscope className="h-4 w-4" />
-                  <span className="hidden sm:inline">Ongoing Procedures</span>
+                  <span className="hidden lg:inline">Ongoing Procedures</span>
+                  <span className="lg:hidden">Ongoing</span>
                 </TabsTrigger>
 
                 <TabsTrigger
-                  value="dishcarged-patients"
-                  className="data-[state=active]:bg-purple-600 data-[state=active]:text-white data-[state=active]:shadow-sm flex items-center gap-2 py-3 transition-all duration-200"
+                  value="asd"
+                  className="data-[state=active]:bg-purple-600 data-[state=active]:text-white data-[state=active]:shadow-sm flex items-center gap-2 py-3 transition-all duration-200 whitespace-nowrap"
                 >
                   <UserCheck className="h-4 w-4" />
-                  <span className="hidden sm:inline">Discharged Patients</span>
+                  <span className="hidden lg:inline">Discharged Patients</span>
+                  <span className="lg:hidden">Discharged</span>
                 </TabsTrigger>
               </TabsList>
             </div>
 
             {/* Add your TabsContent components here */}
-            <TabsContent value="all-waiting-list">
+            <TabsContent value="all-list">
               <AllPatientsList />
+            </TabsContent>
+
+            <TabsContent value="waiting-list">
+              <WaitingList />
             </TabsContent>
 
             <TabsContent value="did-not-attend">
               <DidNotAttendPatientList />
+            </TabsContent>
+
+            <TabsContent value="booked-procedures">
+              <BookedForProcedure />
+            </TabsContent>
+
+            <TabsContent value="pre-assessment">
+              <BookedForPreAssessment />
             </TabsContent>
 
 

@@ -5,9 +5,9 @@ import TableComponent from "@/app/dashboard-testing/components/TableComponent";
 import { baseColumns } from "@/app/dashboard-testing/utils/template";
 import { TableSkeleton } from "@/app/dashboard-testing/components/DataTable/TableSkeleton";
 
-export default function DidNotAttendPatientList() {
+export default function BookedForProcedure() {
     // Wherever you're calling the query, modify it as follows:
-    const key_code = "0 - Cancellation or DNA";
+    const key_code = "1 - Booked for procedure";
 
     const {
         data: patientList,
@@ -25,6 +25,7 @@ export default function DidNotAttendPatientList() {
 
     const allColumns = [
         ...baseColumns,
+        // { id: "assignto", label: "Assign To" },
     ]
 
     return (

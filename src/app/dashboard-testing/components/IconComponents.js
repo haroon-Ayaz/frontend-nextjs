@@ -59,37 +59,3 @@ export const ShortNoticeIcon = ({ isShortNotice }) => {
         </div>
     )
 }
-
-
-// Phone icon
-export const PhoneIcon = ({ lastCallTime, onCall }) => {
-    const [isOpen, setIsOpen] = useState(false)
-    const [callTime, setCallTime] = useState("")
-
-    const handleSubmit = () => {
-        onCall(callTime)
-        setCallTime("")
-        setIsOpen(false)
-    }
-
-    return (
-        <>
-            <div className="inline-flex items-center justify-center w-8 h-8">
-                <Button variant="ghost" className="p-0" onClick={() => setIsOpen(true)}>
-                    <Phone className={`${ICON_SIZE} ${lastCallTime ? "text-green-500" : "text-gray-400"}`} />
-                </Button>
-            </div>
-            <Dialog open={isOpen} onOpenChange={setIsOpen}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Log Call Time</DialogTitle>
-                    </DialogHeader>
-                    <Input type="datetime-local" value={callTime} onChange={(e) => setCallTime(e.target.value)} />
-                    <DialogFooter>
-                        <Button onClick={handleSubmit}>Log Call</Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
-        </>
-    )
-}

@@ -10,16 +10,20 @@ import Pagination from "@/app/dashboard-testing/components/DataTable/Pagination"
 import useFilters from "@/hooks/useFilters";
 import usePagination from "@/hooks/usePagination";
 import DataTable from "@/app/dashboard-testing/components/DataTable/DataTable";
+import { updatePatientComments, updatePatientCallLogs } from "@/app/api/actions"
 
 export default function TableComponent({ columns, data, role, clinicians, onAssignPatient }) {
   const [viewMode, setViewMode] = React.useState("standard")
 
   const handleAddComment = (patientId, comment) => {
     // Logic to add a comment to a patient
+    updatePatientComments({ patientId, comment })
   };
 
-  const handleLogCall = (patientId, time) => {
+  const handleLogCall = (patientId, date, time, comment) => {
     // Logic to log a call for a patient
+    console.log("Recieved call log data ", patientId, date, time, comment)
+    updatePatientCallLogs({ patientId, date, time, comment })
   };
 
   // Move the useFilters hook call above the filteredData useMemo

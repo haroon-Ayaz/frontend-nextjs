@@ -33,21 +33,22 @@ export const baseColumns = [
                 <CancerIcon isBooked={row.isBooked} is2WeekWait={row.referral_priority === "2 Week Rule"} />
                 <Over13WeeksIcon isBooked={row.isBooked} isOver13Weeks={row.sub_type === "13+ Weeks"} />
                 <ShortNoticeIcon isShortNotice={row.short_notice_flag === "Y"} />
-                <CommentIcon comments={row.comment} onAddComment={(comment) => extraProps.onAddComment(row.id, comment)} />
-                <PhoneIcon patient_rxkid="RXK100000" onCall={(time) => extraProps.onLogCall(row.id, time)} />
+                <CommentIcon comments={row.comment} onAddComment={(comment) => extraProps.onAddComment(row.rxkid, comment)} />
+                {<PhoneIcon patient_rxkid={row.rxkid} onCall={(call_date, call_time, admin_comment) =>
+                    extraProps.onLogCall(row.rxkid, call_date, call_time, admin_comment)} />}
             </div>
         ),
     },
     { id: "forename", label: "First Name" },
     { id: "surname", label: "Last Name" },
     { id: "waitlist_name", label: "Waitlist Name" },
+    { id: "key_code", label: "Key Code" },
     { id: "test_type", label: "Test Type" },
     { id: "test_type_main", label: "Test Type Main" },
     { id: "rxkid", label: "RXK ID" },
     { id: "reporting_status", label: "Reporting Status" },
     { id: "points", label: "Points" },
     { id: "requires_pre_add", label: "Requires Pre-Add" },
-    { id: "key_code", label: "Key Code" },
     { id: "comment", label: "Comment" },
     { id: "dated", label: "Dated" },
     { id: "sub_type", label: "Sub Type" },
