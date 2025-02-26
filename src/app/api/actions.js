@@ -56,10 +56,10 @@ export async function assignPatient(data) {
  *   - date
  * which matches the structure of your working curl command.
  */
-const sendSMS = async (recipientNumber, date) => {
+export async function sendSMS(recipientNumber, date) {
   try {
     const result = await sendApiData(
-      `${BASE_API_URL}/api/send_sms`,
+      `${BASE_API_URL}/api/v2/send_sms`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -135,3 +135,4 @@ export async function updatePatientCallLogs({ patientId, date, time, comment }) 
 export async function refreshDatabase() {
   return await fetchApiData(`${BASE_API_URL}/api/v2/refresh_database`)
 }
+

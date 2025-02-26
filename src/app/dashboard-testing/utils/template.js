@@ -10,6 +10,7 @@ import {
 } from "@/app/dashboard-testing/components/IconComponents"
 import { PhoneIcon } from "@/app/dashboard-testing/components/icons/PhoneIcons"
 import { CommentIcon } from "@/app/dashboard-testing/components/icons/CommentIcon"
+import { SMSIcon } from "@/app/dashboard-testing/components/icons/SmsMssg"
 
 export const PatientDetailsButton = ({ patient }) => {
     const [open, setOpen] = useState(false)
@@ -34,6 +35,7 @@ export const baseColumns = [
                 <Over13WeeksIcon isBooked={row.isBooked} isOver13Weeks={row.sub_type === "13+ Weeks"} />
                 <ShortNoticeIcon isShortNotice={row.short_notice_flag === "Y"} />
                 <CommentIcon comments={row.comment} onAddComment={(comment) => extraProps.onAddComment(row.rxkid, comment)} />
+                <SMSIcon />
                 {<PhoneIcon patient_rxkid={row.rxkid} onCall={(call_date, call_time, admin_comment) =>
                     extraProps.onLogCall(row.rxkid, call_date, call_time, admin_comment)} />}
             </div>
