@@ -1,6 +1,4 @@
 "use client"
-
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { CalendarIcon, ActivityIcon, FileTextIcon, UsersIcon, LayoutDashboardIcon } from "lucide-react"
 import useCurrentUser from "@/hooks/useUser"
@@ -9,17 +7,30 @@ import { useQuery } from "@tanstack/react-query"
 import StatsCard from "@/app/dashboard-testing/components/StatsCard"
 import AllPatientsList from "@/app/dashboard-testing/service/AllPatientsList"
 import { SkeletonLoader } from "@/app/dashboard-testing/components/SkeletonLoader"
-import Link from "next/link";
-import { Users, Calendar, ClipboardCheck, Stethoscope, UserCheck, XCircle, ClipboardList } from "lucide-react"
+import Link from "next/link"
+import {
+  Users,
+  Calendar,
+  ClipboardCheck,
+  Stethoscope,
+  UserCheck,
+  XCircle,
+  ClipboardList,
+  RefreshCw,
+} from "lucide-react"
 import DidNotAttendPatientList from "@/app/dashboard-testing/service/DidNotAttend"
 import BookedForProcedure from "@/app/dashboard-testing/service/BookedProcedures"
 import BookedForPreAssessment from "@/app/dashboard-testing/service/PreAssessment"
 import WaitingList from "@/app/dashboard-testing/service/WaitingList"
-
+import { Button } from "@/components/ui/button"
+import { refreshDatabase } from "@/app/api/actions"
+import { AlertComponent } from "@/app/dashboard-testing/components/AlertDialogBox"
+import { useState } from "react"
 
 export default function Dashboard() {
   const { role, email, fname } = useCurrentUser()
-
+  // In your component:
+  const [showAlert, setShowAlert] = useState(false)
   const {
     data: stats,
     isLoading: loadingStats,
@@ -85,10 +96,25 @@ export default function Dashboard() {
     },
   ]
 
+  const handleRefreshDatabase = () => {
+    console.log("Refreshing database...")
+    // Add your database refresh logic here
+    refreshDatabase()
+    setShowAlert(true)
+  }
+
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <header className="sticky top-0 z-50 border-b bg-background">
-        <div className="max-w-7xl mx-auto flex h-16 items-center justify-between px-4">
+        {showAlert && (
+          <AlertComponent
+            variant="success"
+            title="Database Refreshed"
+            description="The database has been successfully updated."
+            duration={1500} // Optional: customize duration (in milliseconds)
+          />
+        )}
+        <div className="max-w-7xl mx-auto flex h-16 items-center justify-between px-4 lg:px-8">
           <div className="flex items-center space-x-4">
             <LayoutDashboardIcon className="h-6 w-6" />
             <h1 className="text-xl font-bold">My Endoscopy Tracker App</h1>
@@ -96,6 +122,15 @@ export default function Dashboard() {
           <div className="flex items-center space-x-4">
             <span className="text-sm text-muted-foreground">Welcome, {fname}</span>
             <span className="text-sm font-semibold">{role}</span>
+            <Button
+              onClick={handleRefreshDatabase}
+              variant="outline"
+              size="sm"
+              className="ml-4 bg-primary text-primary-foreground hover:bg-primary/90"
+            >
+              <RefreshCw className="mr-2 h-4 w-4" />
+              Refresh Database
+            </Button>
           </div>
         </div>
       </header>
@@ -105,23 +140,22 @@ export default function Dashboard() {
         <div className="py-6 bg-background relative z-40">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {statsData.map((stat, index) => {
-              const card = <StatsCard key={index} {...stat} />;
+              const card = <StatsCard key={index} {...stat} />
               if (stat.title === "Waiting List") {
                 return (
                   <Link href="/test/wlp" key={index}>
                     {card}
                   </Link>
-                );
+                )
               } else if (stat.title === "Active Clinicians") {
                 return (
                   <Link href="/test/cli" key={index}>
                     {card}
                   </Link>
-                );
+                )
               }
-              return card;
+              return card
             })}
-
           </div>
         </div>
 
@@ -148,7 +182,7 @@ export default function Dashboard() {
                 </TabsTrigger>
 
                 <TabsTrigger
-                  value="total-waiting-list"
+                  value="did-not-attend"
                   className="data-[state=active]:bg-destructive data-[state=active]:text-destructive-foreground data-[state=active]:shadow-sm flex items-center gap-2 py-3 transition-all duration-200 whitespace-nowrap"
                 >
                   <XCircle className="h-4 w-4" />
@@ -157,7 +191,7 @@ export default function Dashboard() {
                 </TabsTrigger>
 
                 <TabsTrigger
-                  value="procedures"
+                  value="booked-procedures"
                   className="data-[state=active]:bg-green-600 data-[state=active]:text-white data-[state=active]:shadow-sm flex items-center gap-2 py-3 transition-all duration-200 whitespace-nowrap"
                 >
                   <Calendar className="h-4 w-4" />
@@ -166,7 +200,7 @@ export default function Dashboard() {
                 </TabsTrigger>
 
                 <TabsTrigger
-                  value="discharged"
+                  value="pre-assessment"
                   className="data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-sm flex items-center gap-2 py-3 transition-all duration-200 whitespace-nowrap"
                 >
                   <ClipboardCheck className="h-4 w-4" />
@@ -214,8 +248,6 @@ export default function Dashboard() {
             <TabsContent value="pre-assessment">
               <BookedForPreAssessment />
             </TabsContent>
-
-
           </Tabs>
         </div>
       </div>

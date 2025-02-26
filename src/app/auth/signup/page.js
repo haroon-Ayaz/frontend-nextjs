@@ -29,7 +29,7 @@ export default function SignUpPage() {
         }
 
         try {
-            const response = await fetch("https://flask-qga8pcv7b-kyojur0s-projects.vercel.app/api/custom-auth/signup", {
+            const response = await fetch("https://flask-nine-green.vercel.app/api/custom-auth/signup", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

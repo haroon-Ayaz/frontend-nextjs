@@ -3,7 +3,7 @@
 
 import { fetchApiData, sendApiData } from "./api";
 
-const BASE_API_URL = "http://127.0.0.1:5000";
+const BASE_API_URL = "https://flask-nine-green.vercel.app";
 
 export async function getClinicians() {
   return await fetchApiData(`${BASE_API_URL}/api/v2/get_clinicians`);
@@ -129,8 +129,9 @@ export async function updatePatientComments({ patientId, comment }) {
 }
 
 export async function updatePatientCallLogs({ patientId, date, time, comment }) {
-  console.log(patientId, date, time, comment)
-
   return await sendApiData(`${BASE_API_URL}/api/v2/update_call_logs`, {}, { patientId, date, time, comment });
 }
 
+export async function refreshDatabase() {
+  return await fetchApiData(`${BASE_API_URL}/api/v2/refresh_database`)
+}
