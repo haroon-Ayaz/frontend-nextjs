@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useQuery } from "@tanstack/react-query"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -8,9 +9,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Search } from "lucide-react"
 import { Input } from "@/components/ui/input"
+import { getClinicians } from "@/app/api/actions";
 
 // Mock data for clinicians
-const clinicians = [
+const oldclinicians = [
     {
         id: 1,
         name: "Dr. Emily Johnson",
@@ -61,10 +63,38 @@ const getAvailabilityColor = (availability) => {
     }
 }
 
-export default function AssignClinicianComponent({ patientName, onAssign }) {
+const specialties = ["Cardiology", "Neurology", "Oncology", "Orthopedics", "Pediatrics"];
+const availabilities = ["High", "Medium", "Low"];
+
+function transformClinicians(data) {
+    return data.clinicians.map((clinician) => ({
+        id: clinician.id,
+        name: `Dr. ${clinician.fname} ${clinician.lname}`,
+        specialty: specialties[Math.floor(Math.random() * specialties.length)],
+        availability: availabilities[Math.floor(Math.random() * availabilities.length)],
+        imageUrl: "/placeholder.svg?height=40&width=40",
+    }));
+}
+
+
+export default function AssignClinicianComponent({ patient, onAssign }) {
     const [isOpen, setIsOpen] = useState(false)
     const [searchTerm, setSearchTerm] = useState("")
     const [selectedClinician, setSelectedClinician] = useState(null)
+
+    const {
+        data: bckdclinicians,
+        isLoading: loadingClinicians,
+        error: errorClinicians,
+    } = useQuery({
+        queryKey: ["clinicians"],
+        queryFn: getClinicians,
+        refetchInterval: 2000,
+    })
+
+    let clinicians = transformClinicians(bckdclinicians)
+
+    const patientName = `${patient.forename} ${patient.surname}`
 
     const filteredClinicians = clinicians.filter(
         (clinician) =>
@@ -74,7 +104,7 @@ export default function AssignClinicianComponent({ patientName, onAssign }) {
 
     const handleAssign = () => {
         if (selectedClinician) {
-            onAssign(selectedClinician)
+            onAssign(selectedClinician, patient.rxkid)
             setIsOpen(false)
             setSelectedClinician(null)
         }
@@ -111,19 +141,20 @@ export default function AssignClinicianComponent({ patientName, onAssign }) {
                                     <Avatar>
                                         <AvatarImage src={clinician.imageUrl} alt={clinician.name} />
                                         <AvatarFallback>
-                                            {clinician.name
-                                                .split(" ")
-                                                .map((n) => n[0])
-                                                .join("")}
+                                            {(() => {
+                                                const parts = clinician.name.split(" ");
+                                                const nameParts = parts[0].toLowerCase() === "dr." || parts[0].toLowerCase() === "dr"
+                                                    ? parts.slice(1)
+                                                    : parts;
+                                                return nameParts.map((n) => n[0]).join("");
+                                            })()}
                                         </AvatarFallback>
                                     </Avatar>
+
                                     <div className="flex-1">
                                         <h3 className="font-medium">{clinician.name}</h3>
                                         <p className="text-sm text-gray-500">{clinician.specialty}</p>
                                     </div>
-                                    <Badge variant="secondary" className={`${getAvailabilityColor(clinician.availability)}`}>
-                                        {clinician.availability}
-                                    </Badge>
                                 </div>
                             ))}
                         </ScrollArea>

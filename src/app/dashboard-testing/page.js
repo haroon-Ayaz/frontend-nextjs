@@ -1,13 +1,12 @@
 "use client"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { CalendarIcon, ActivityIcon, FileTextIcon, UsersIcon, LayoutDashboardIcon } from "lucide-react"
+import { LayoutDashboardIcon } from "lucide-react"
 import useCurrentUser from "@/hooks/useUser"
-import { getStatistics, getClinicians, getPatients } from "@/app/api/actions"
+import { getClinicians, getPatients, getStats } from "@/app/api/actions"
 import { useQuery } from "@tanstack/react-query"
 import StatsCard from "@/app/dashboard-testing/components/StatsCard"
 import AllPatientsList from "@/app/dashboard-testing/service/AllPatientsList"
 import { SkeletonLoader } from "@/app/dashboard-testing/components/SkeletonLoader"
-import Link from "next/link"
 import {
   Users,
   Calendar,
@@ -17,6 +16,8 @@ import {
   XCircle,
   ClipboardList,
   RefreshCw,
+  Activity,
+  AlertTriangle,
 } from "lucide-react"
 import DidNotAttendPatientList from "@/app/dashboard-testing/service/DidNotAttend"
 import BookedForProcedure from "@/app/dashboard-testing/service/BookedProcedures"
@@ -26,20 +27,24 @@ import { Button } from "@/components/ui/button"
 import { refreshDatabase } from "@/app/api/actions"
 import { AlertComponent } from "@/app/dashboard-testing/components/AlertDialogBox"
 import { useState } from "react"
+import OngoingProcedures from "@/app/dashboard-testing/service/OngoingProcedures"
+import DischargePatient from "@/app/dashboard-testing/service/clinician/DischargePatient"
+
 
 export default function Dashboard() {
-  const { role, email, fname } = useCurrentUser()
-  // In your component:
+  const { role, email, fname, lname } = useCurrentUser()
   const [showAlert, setShowAlert] = useState(false)
+
   const {
     data: stats,
     isLoading: loadingStats,
     error: errorStats,
   } = useQuery({
     queryKey: ["statistics"],
-    queryFn: getStatistics,
+    queryFn: getStats,
     refetchInterval: 2000,
   })
+
 
   const {
     data: patients,
@@ -72,33 +77,45 @@ export default function Dashboard() {
   const statsData = [
     {
       title: "Waiting List",
-      value: stats?.total_waiting || 0,
-      Icon: CalendarIcon,
+      value: stats?.total_wl || 0,
       subtext: "Patients waiting",
+      icon: ClipboardList,
     },
     {
       title: "Ongoing Procedures",
-      value: stats?.total_procedures || 0,
-      Icon: FileTextIcon,
+      value: stats?.total_ong_proce || 0,
       subtext: "Current procedures",
+      icon: Activity,
     },
     {
       title: "Discharged Patients",
       value: stats?.total_discharged || 0,
-      Icon: ActivityIcon,
       subtext: "Recently discharged",
+      icon: UserCheck,
     },
     {
-      title: "Active Clinicians",
-      value: clinicians?.total_clinicians || 0,
-      Icon: UsersIcon,
-      subtext: "Available staff",
+      title: "Booked for Procedure",
+      value: stats?.total_bkd_proce || 0,
+      subtext: "Patients booked for procedure",
+      icon: Calendar,
+    },
+    {
+      title: "Booked for Pre-Assessment",
+      value: stats?.total_bkd_pre_asses || 0,
+      subtext: "Patients booked for pre-assessment",
+      icon: ClipboardCheck,
+    },
+    {
+      title: "Cancellation or DNA",
+      value: stats?.total_dna || 0,
+      subtext: "Patients who cancelled or DNA",
+      icon: AlertTriangle,
     },
   ]
 
+
   const handleRefreshDatabase = () => {
     console.log("Refreshing database...")
-    // Add your database refresh logic here
     refreshDatabase()
     setShowAlert(true)
   }
@@ -111,7 +128,7 @@ export default function Dashboard() {
             variant="success"
             title="Database Refreshed"
             description="The database has been successfully updated."
-            duration={1500} // Optional: customize duration (in milliseconds)
+            duration={1500}
           />
         )}
         <div className="max-w-7xl mx-auto flex h-16 items-center justify-between px-4 lg:px-8">
@@ -136,26 +153,18 @@ export default function Dashboard() {
       </header>
 
       <div className="flex-1 max-w-7xl mx-auto w-full px-4">
-        {/* Stats Section - Fixed height, independent of other content */}
         <div className="py-6 bg-background relative z-40">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            {statsData.map((stat, index) => {
-              const card = <StatsCard key={index} {...stat} />
-              if (stat.title === "Waiting List") {
-                return (
-                  <Link href="/test/wlp" key={index}>
-                    {card}
-                  </Link>
-                )
-              } else if (stat.title === "Active Clinicians") {
-                return (
-                  <Link href="/test/cli" key={index}>
-                    {card}
-                  </Link>
-                )
-              }
-              return card
-            })}
+          <div className="grid grid-cols-1 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {statsData.slice(0, 3).map((stat, index) => (
+                <StatsCard key={index} {...stat} />
+              ))}
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {statsData.slice(3).map((stat, index) => (
+                <StatsCard key={index + 3} {...stat} />
+              ))}
+            </div>
           </div>
         </div>
 
@@ -190,14 +199,17 @@ export default function Dashboard() {
                   <span className="lg:hidden">DNA</span>
                 </TabsTrigger>
 
-                <TabsTrigger
-                  value="booked-procedures"
-                  className="data-[state=active]:bg-green-600 data-[state=active]:text-white data-[state=active]:shadow-sm flex items-center gap-2 py-3 transition-all duration-200 whitespace-nowrap"
-                >
-                  <Calendar className="h-4 w-4" />
-                  <span className="hidden lg:inline">Booked Procedures</span>
-                  <span className="lg:hidden">Booked</span>
-                </TabsTrigger>
+                {role === "Admin" && (
+                  <TabsTrigger
+                    value="booked-procedures"
+                    className="data-[state=active]:bg-green-600 data-[state=active]:text-white data-[state=active]:shadow-sm flex items-center gap-2 py-3 transition-all duration-200 whitespace-nowrap"
+                  >
+                    <Calendar className="h-4 w-4" />
+                    <span className="hidden lg:inline">Booked Procedures</span>
+                    <span className="lg:hidden">Booked</span>
+                  </TabsTrigger>
+                )}
+
 
                 <TabsTrigger
                   value="pre-assessment"
@@ -208,17 +220,18 @@ export default function Dashboard() {
                   <span className="lg:hidden">Pre-Assess</span>
                 </TabsTrigger>
 
-                <TabsTrigger
-                  value="add-patient"
-                  className="data-[state=active]:bg-amber-600 data-[state=active]:text-white data-[state=active]:shadow-sm flex items-center gap-2 py-3 transition-all duration-200 whitespace-nowrap"
-                >
-                  <Stethoscope className="h-4 w-4" />
-                  <span className="hidden lg:inline">Ongoing Procedures</span>
-                  <span className="lg:hidden">Ongoing</span>
-                </TabsTrigger>
+                {role === "Clinician" && (
+                  <TabsTrigger
+                    value="ongoing-procedures"
+                    className="data-[state=active]:bg-amber-600 data-[state=active]:text-white data-[state=active]:shadow-sm flex items-center gap-2 py-3 transition-all duration-200 whitespace-nowrap"
+                  >
+                    <Stethoscope className="h-4 w-4" />
+                    <span className="hidden lg:inline">Ongoing Procedures</span>
+                    <span className="lg:hidden">Ongoing</span>
+                  </TabsTrigger>)}
 
                 <TabsTrigger
-                  value="asd"
+                  value="discharged-patients"
                   className="data-[state=active]:bg-purple-600 data-[state=active]:text-white data-[state=active]:shadow-sm flex items-center gap-2 py-3 transition-all duration-200 whitespace-nowrap"
                 >
                   <UserCheck className="h-4 w-4" />
@@ -228,7 +241,6 @@ export default function Dashboard() {
               </TabsList>
             </div>
 
-            {/* Add your TabsContent components here */}
             <TabsContent value="all-list">
               <AllPatientsList />
             </TabsContent>
@@ -247,6 +259,14 @@ export default function Dashboard() {
 
             <TabsContent value="pre-assessment">
               <BookedForPreAssessment />
+            </TabsContent>
+
+            <TabsContent value="ongoing-procedures">
+              <OngoingProcedures />
+            </TabsContent>
+
+            <TabsContent value="discharged-patients">
+              <DischargePatient />
             </TabsContent>
           </Tabs>
         </div>

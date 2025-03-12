@@ -146,7 +146,7 @@ export function PatientDetailsDialog({ patient, onClose }) {
 
                     {/* Comments Section - Full Width */}
                     {comments.length > 0 && (
-                        <Section icon={MessageSquare} title="Comments History" color="amber">
+                        <Section icon={MessageSquare} title="Admin Comments History" color="amber">
                             <div className="space-y-4">
                                 {comments.map((comment, index) => (
                                     <Comment key={index} {...comment} />

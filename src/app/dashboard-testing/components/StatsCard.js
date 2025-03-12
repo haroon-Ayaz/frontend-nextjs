@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
-export default function StatCard({ title, value, Icon, subtext }) {
+export default function StatCard({ title, value, icon, subtext }) {
+  const Icon = icon;
   return (
     <Card className="h-[140px]">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

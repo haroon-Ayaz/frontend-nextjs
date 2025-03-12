@@ -7,12 +7,16 @@ import { Label } from "@/components/ui/label"
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Image from "next/image";
+import { RefreshCw } from "lucide-react"
+import { AlertComponent } from "@/app/dashboard-testing/components/AlertDialogBox";
+import { refreshDatabase } from "@/app/api/actions";
 
 export default function LoginPage() {
     const router = useRouter();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [showAlert, setShowAlert] = useState(false)
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -47,13 +51,39 @@ export default function LoginPage() {
         }
     };
 
+    const handleRefreshDatabase = () => {
+        console.log("Refreshing database...")
+        // Add your database refresh logic here
+        setShowAlert(false)
+        refreshDatabase()
+        setTimeout(() => setShowAlert(true), 50);
+    }
+
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+            {showAlert && (
+                <AlertComponent
+                    variant="success"
+                    title="Database Refreshed"
+                    description="The database has been successfully updated."
+                    duration={1500} // Optional: customize duration (in milliseconds)
+                />
+            )}
+            <div className="absolute top-4 left-4">
+                <Button
+                    onClick={handleRefreshDatabase}
+                    variant="outline"
+                    size="sm"
+                    className="bg-primary text-primary-foreground hover:bg-primary/90"
+                >
+                    <RefreshCw className="mr-2 h-4 w-4" />
+                    Refresh Database
+                </Button>
+            </div>
             <div className="sm:mx-auto sm:w-full sm:max-w-md flex flex-col items-center">
-                <Image className="mx-auto h-32 w-auto" src="/nhs-logo.png" alt="NHS Logo" />
+                <img className="mx-auto h-32 w-auto" src="/nhs-logo.png" alt="NHS Logo" />
                 <h2 className="mt-4 text-center text-3xl font-extrabold text-gray-900">Please Sign In</h2>
             </div>
-
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
                 <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
                     <form className="space-y-6" onSubmit={handleSubmit}>

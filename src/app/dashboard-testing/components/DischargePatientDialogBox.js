@@ -10,8 +10,10 @@ import { AlertCircle, CheckCircle2, UserRound, Calendar, ClipboardList, Pill } f
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
+import { dischargePatients } from "@/app/api/actions"
 
-export function DischargePatientDialogBox({ patientName, patientId, admissionDate, onDischarge }) {
+
+export function DischargePatientDialogBox({ patientName, patientId, admissionDate }) {
     const [isOpen, setIsOpen] = useState(false)
     const [dischargeConfirmed, setDischargeConfirmed] = useState(null)
     const [remarks, setRemarks] = useState("")
@@ -20,9 +22,12 @@ export function DischargePatientDialogBox({ patientName, patientId, admissionDat
     const [dischargeError, setDischargeError] = useState("")
 
     const handleDischarge = async () => {
+        console.log("Discharged Value Is: ", dischargeConfirmed)
         if (dischargeConfirmed === "yes") {
             try {
-                await onDischarge(patientId, remarks, medicationInstructions)
+                // await onDischarge(patientId, remarks, medicationInstructions)
+                console.log("Following info will be sent to the backend of nextjs: ", patientId, remarks, medicationInstructions)
+                dischargePatients({ rxkid: patientId, discharge_notes: remarks, recovery_instructions: medicationInstructions })
                 setDischargeSuccess(true)
                 setDischargeError("")
                 setTimeout(() => setIsOpen(false), 2000) // Close dialog after 2 seconds

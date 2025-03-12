@@ -11,6 +11,7 @@ import {
 import { PhoneIcon } from "@/app/dashboard-testing/components/icons/PhoneIcons"
 import { CommentIcon } from "@/app/dashboard-testing/components/icons/CommentIcon"
 import { SMSIcon } from "@/app/dashboard-testing/components/icons/SmsMssg"
+import useCurrentUser from "@/hooks/useUser"
 
 export const PatientDetailsButton = ({ patient }) => {
     const [open, setOpen] = useState(false)
@@ -24,22 +25,58 @@ export const PatientDetailsButton = ({ patient }) => {
     )
 }
 
+const ActionsColumn = ({ row, onAddComment, onLogCall }) => {
+    const { role } = useCurrentUser();
+
+    return (
+        <div className="inline-flex items-center space-x-1">
+            <CancerIcon isBooked={row.isBooked} is2WeekWait={row.referral_priority === "2 Week Rule"} />
+            <Over13WeeksIcon isBooked={row.isBooked} isOver13Weeks={row.sub_type === "13+ Weeks"} />
+            <ShortNoticeIcon isShortNotice={row.short_notice_flag === "Y"} />
+            {role === "Admin" && (
+                <>
+                    <CommentIcon comments={row.comment} onAddComment={(comment) => onAddComment(row.rxkid, comment)} />
+                    <SMSIcon />
+                    <PhoneIcon
+                        patient_rxkid={row.rxkid}
+                        onCall={(call_date, call_time, admin_comment) =>
+                            onLogCall(row.rxkid, call_date, call_time, admin_comment)
+                        }
+                    />
+                </>
+            )}
+        </div>
+    );
+};
+
 export const baseColumns = [
     { id: "id", label: "ID" },
     {
         id: "actions",
         label: "Actions",
         render: (row, extraProps) => (
-            <div className="inline-flex items-center space-x-1">
-                <CancerIcon isBooked={row.isBooked} is2WeekWait={row.referral_priority === "2 Week Rule"} />
-                <Over13WeeksIcon isBooked={row.isBooked} isOver13Weeks={row.sub_type === "13+ Weeks"} />
-                <ShortNoticeIcon isShortNotice={row.short_notice_flag === "Y"} />
-                <CommentIcon comments={row.comment} onAddComment={(comment) => extraProps.onAddComment(row.rxkid, comment)} />
-                <SMSIcon />
-                {<PhoneIcon patient_rxkid={row.rxkid} onCall={(call_date, call_time, admin_comment) =>
-                    extraProps.onLogCall(row.rxkid, call_date, call_time, admin_comment)} />}
-            </div>
+            <ActionsColumn
+                row={row}
+                onAddComment={extraProps.onAddComment}
+                onLogCall={extraProps.onLogCall}
+            />
         ),
+        // render: (row, extraProps) => {
+        //     return (
+        //         <div className="inline-flex items-center space-x-1">
+        //             <CancerIcon isBooked={row.isBooked} is2WeekWait={row.referral_priority === "2 Week Rule"} />
+        //             <Over13WeeksIcon isBooked={row.isBooked} isOver13Weeks={row.sub_type === "13+ Weeks"} />
+        //             <ShortNoticeIcon isShortNotice={row.short_notice_flag === "Y"} />
+
+        //             <>
+        //                 <CommentIcon comments={row.comment} onAddComment={(comment) => extraProps.onAddComment(row.rxkid, comment)} />
+        //                 <SMSIcon />
+        //                 <PhoneIcon patient_rxkid={row.rxkid} onCall={(call_date, call_time, admin_comment) =>
+        //                     extraProps.onLogCall(row.rxkid, call_date, call_time, admin_comment)} />
+        //             </>
+        //         </div>
+        //     )
+        // },
     },
     { id: "forename", label: "First Name" },
     { id: "surname", label: "Last Name" },

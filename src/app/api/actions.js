@@ -13,6 +13,10 @@ export async function getStatistics() {
   return await fetchApiData(`${BASE_API_URL}/api/v2/get_statistics`);
 }
 
+export async function getStats() {
+  return await fetchApiData(`${BASE_API_URL}/api/v2/get_stats`)
+}
+
 export async function getPatients() {
   return await fetchApiData(`${BASE_API_URL}/api/v2/raw_new_test_patient`);
 }
@@ -31,7 +35,24 @@ export async function getCustomPatientDataSet({ key_code }) {
 }
 
 export async function getDischargedPatients() {
-  return await fetchApiData(`${BASE_API_URL}/api/v2/get_discharged_patients`)
+  return await fetchApiData(`${BASE_API_URL}/api/v2/get_discharged_patients_from_key_code`)
+}
+
+export async function dischargePatients({ rxkid, discharge_notes, recovery_instructions }) {
+  try {
+    const response = await fetch(`${BASE_API_URL}/api/v2/discharge_patients`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ rxkid, discharge_notes, recovery_instructions })
+    });
+
+    if (!response.ok) throw new Error("Failed to fetch ongoing procedures");
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching ongoing procedures:", error);
+    throw error;
+  }
 }
 
 /**
@@ -40,7 +61,7 @@ export async function getDischargedPatients() {
  */
 export async function assignPatient(data) {
   return await sendApiData(
-    `${BASE_API_URL}/api/assignpatient`,
+    `${BASE_API_URL}/api/v2/assign_patient`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -85,7 +106,8 @@ export async function sendSMS(recipientNumber, date) {
  * @param {string} params.appointment_date - A formatted date string.
  * @returns {Object} An object containing both assignment and SMS results.
  */
-export async function handlePatientAssignment({ patient_id, assigned_to, recipient_number, appointment_date }) {
+export async function handlePatientAssignment({ patient_id, assigned_to }) {
+  console.log("Recieved Patient ID In `handlePatientAssignment` Func: ", patient_id, " Assigned To: ", assigned_to)
   // Ensure patient_id is a primitive
   if (typeof patient_id !== "string" && typeof patient_id !== "number") {
     throw new Error("patient_id must be a primitive value (string or number).");
@@ -97,8 +119,7 @@ export async function handlePatientAssignment({ patient_id, assigned_to, recipie
     console.log("Patient assigned successfully:", assignResult);
 
     // Call sendSMS after successful patient assignment
-    const smsResult = await sendSMS(recipient_number, appointment_date);
-    return { assignResult, smsResult };
+    return { assignResult };
   } catch (error) {
     console.error("Error in handlePatientAssignment:", error);
     throw error;
@@ -136,3 +157,19 @@ export async function refreshDatabase() {
   return await fetchApiData(`${BASE_API_URL}/api/v2/refresh_database`)
 }
 
+export async function getOnGoingProcedurePatients({ fullName, role }) {
+  try {
+    const response = await fetch(`${BASE_API_URL}/api/v2/ongoing_procedures`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ fname: fullName.split(" ")[0], lname: fullName.split(" ")[1], user_role: role })
+    });
+
+    if (!response.ok) throw new Error("Failed to fetch ongoing procedures");
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching ongoing procedures:", error);
+    throw error;
+  }
+}
